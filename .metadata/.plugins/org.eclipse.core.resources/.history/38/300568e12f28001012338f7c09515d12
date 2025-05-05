@@ -1,0 +1,91 @@
+package Maze;
+
+import java.util.*;
+
+public class GameMain  implements IScreen{
+
+	public static void main(String[] args) {
+		GameMain gm = new GameMain();
+		MapNode m = new MapNode(1); //맵 생성
+		Scanner sc = new Scanner(System.in);
+		Player p = null;
+		String name = null;
+		int num = 0;
+		
+		while(p == null) {
+			if(name == null) { //아이콘 재입력시에는 닉네임은 받지 않음
+				System.out.print("닉네임을 입력해주세요 : ");
+				name = sc.nextLine();
+			}
+			System.out.println("플레이어 아이콘을 선택 해주세요 ");
+			System.out.printf("1.%s 2.%s 3.%s 4.%s : ",p.Type[0],p.Type[1],p.Type[2],p.Type[3]);
+			
+			try {
+				num = sc.nextInt();
+				sc.nextLine();
+				if(num > 4 || num <=0) {
+					throw new Exception("입력");
+				}
+			}
+			catch(Exception e) {
+				sc.nextLine();
+				System.out.println("잘못된 입력입니다.");
+				continue;
+			}
+			p = new Player(name,num);
+			
+		}
+		
+		while(!m.getGoal()) { //골이 나올때까지 반복
+			
+			printLoad(m);
+			try {
+				System.out.print("왼쪽 이동 <1> 가운데 이동 <2> 오른쪽 이동 <3> 플레이어 상태 <4> : ");
+				num = sc.nextInt();
+				if(num <= 0 || num > 4) {throw new Exception("입력오류");}
+			}
+			catch(Exception e) {
+				sc.nextLine();
+				System.out.println("다시 입력해주세요.");
+				continue;
+			}
+			if(num < 4) {
+				m = move(m,num-1);
+				
+			}
+		
+			else {
+				p.getStatus();
+			}
+			if(p.getHp() <= 0) {
+				System.out.println("눈앞이 깜깜해졌다.");
+				System.out.println(p.getName()+"은 미로의 거름되어간다.");
+				System.out.println("DEAD END");
+				break;
+			}
+		}
+		
+	
+	}
+
+	public void printLoad(MapNode m) {
+		boolean left = m.getMap(0) != null;
+		boolean right = m.getMap(2) != null;
+		boolean mid = m.getMap(1) != null;
+		IScreen.printWall(left,mid,right);
+	}
+	@Override
+	public  MapNode move(MapNode m, int vect) {
+		// TODO Auto-generated method stub
+		int stage = m.getStage();
+		if(stage < 10) {
+			if((int)(Math.random()*10) == 1) {
+				Enemy e  = new Enemy(stage, (int)(Math.random()*4));
+				//랜덤 에너미 생성
+				
+			}
+		}
+		return m.getMap(vect);
+		
+	}
+}

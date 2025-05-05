@@ -1,0 +1,10 @@
+package Maze;
+
+public class Entity {
+	private int hp;
+	private char img;
+	
+	public Entity(int hp, char img) {
+		
+	}
+}

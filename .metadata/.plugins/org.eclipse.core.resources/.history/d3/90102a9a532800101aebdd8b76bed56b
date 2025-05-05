@@ -1,0 +1,167 @@
+package Maze;
+
+
+
+public interface IScreen {
+	public MapNode move(MapNode m, int vect); //맵 이동	
+
+	//플레이어는 최대 3방향으로 이동가능
+	public static final String[] OPEN_LEFT = {
+			"|\\                   /",
+			"| \\                 / ",
+			"| \\                /  ",
+			"| \\               /   ",
+			"| \\              /    ",
+			"|  \\            /     ",
+			"|   \\          /      ",
+			"|    \\ ______ /       ",
+			"|     |      |        ",
+			"|     |      |        ",
+			"|     |      |        ",
+			"|     |      |        ",
+			"|_____|      |________"
+	};
+	
+	
+	
+	public static final String[] OPEN_MID = {
+										
+			"|\\                  /|",
+			"| \\                / |",
+			"|  \\              /  |",
+			"|   \\            /   |",
+			"|    \\          /    |",
+			"|     \\        /     |",
+			"|      \\______/      |",
+			"|      |      |      |",
+			"|      |      |      |",
+			"|      |      |      |",
+			"|      |      |      |",
+			"|      |      |      |",
+			"|______|      |______|"};
+	public static final String[] OPEN_RIGHT = {
+			
+			"\\                   /|",
+			" \\                 / |",
+			"  \\                / |",
+			"   \\               / |",
+			"     \\            /  |",
+			"      \\           /  |",
+			"       \\          /  |",
+			"        \\  ______/   |",
+			"          |      |   |",
+			"          |      |   |",
+			"          |      |   |",
+			"          |      |   |",
+			"__________|      |___|"};
+	public static final String[] CLOSED = {
+			
+			"______________________",
+			"______________________",
+			"______________________",
+			"______________________",
+			"______________________",
+			"______________________",
+			"______________________",
+			"______________________",
+			"______________________",
+			"______________________",
+			"______________________",
+			"______________________",
+			"______________________"};		
+	
+	public static String[] EntityScreen(Entity e){
+		String[] result = {
+				e.getName(),
+				"HP["+e.getHp()+"/"+e.MAXHP+"]",
+				HPBar(e.getHp(),e.MAXHP),
+				"", //아이콘과 칸을 구분하기 위한 공백
+				e.getImg()
+		};
+		return result;
+	}
+	public static String HPBar(int HP, int maxHP) {
+		final int Bar = 40;
+		int block = (int)((double)HP/maxHP * Bar); //현재 HP의 칸
+		String result = "[";
+		for(int i = 0; i<block; i++) {
+			if( HP < maxHP/2 ) //칸의 마지막이 홀수면 -로표현
+				result += "-";
+			else
+				result += "=";
+		}
+		for(int i =block; i<Bar; i++ ) {
+			if( HP > maxHP/2 ) //칸의 마지막이 홀수면 -로표현
+				result += "-";
+			else
+				result += " ";
+		}
+		result+="]";
+		return result;
+	}
+	
+	public static void Clear() {
+		for(int i = 0; i< OPEN_LEFT.length+5; i++) {
+			System.out.println();
+		}
+	}
+	public static void printWall(boolean LEFT,boolean MID, boolean RIGHT) {
+		String[]L = LEFT ?  OPEN_LEFT:CLOSED;
+		String[]M = MID ?  OPEN_MID:CLOSED;
+		String[]R = RIGHT ?  OPEN_RIGHT:CLOSED; 
+		
+		for(int i = 0; i < OPEN_LEFT.length; i++) {
+			
+			System.out.println(L[i]+M[i]+R[i]);
+		}
+		
+
+	}
+	
+	
+	
+	public static final String Cake = "                                    .      .          .\r\n"
+			+ "\r\n"
+			+ "                         *       .    .           .\r\n"
+			+ "                   .          .       .   *\r\n"
+			+ "                                 .            .\r\n"
+			+ "                       .        .    +              .\r\n"
+			+ "                          .        .       .\r\n"
+			+ "                   .          +         .  *      +\r\n"
+			+ "                         .* . .     .      .    .    .\r\n"
+			+ "                      .       .    ,`',          .\r\n"
+			+ "                          . .    -`   -      .+\r\n"
+			+ "                       .  . +    ~,(.~     .* .\r\n"
+			+ "                    .    .  .       ).._     .   .\r\n"
+			+ "                           *    .:::::%%   .\r\n"
+			+ "                         .     :::;;%%%$\r\n"
+			+ "                               :::::;%%$          .\r\n"
+			+ "                               :%::%:;%$\r\n"
+			+ "                              .:%::::;%$\r\n"
+			+ "                              `\"%:::;;$$\r\n"
+			+ "                            ___ %:::;%%$ ___\r\n"
+			+ "                      .--~'^    %:;:%%$$    ^`~--.\r\n"
+			+ "                   .:'          `^\"\"\"\"^'          `.\r\n"
+			+ "                  (  `~ - ,. _ _       _ _ . ,-  ~`:.\r\n"
+			+ "                  `:             `~~~~'             :\r\n"
+			+ "                   |:_.'`:                    ..    )\r\n"
+			+ "                   `|%%%%`;      .-,.      ,-'##`._.'\r\n"
+			+ "                    |:%%%%$`:.,/'$$$`:   ,;#######|\r\n"
+			+ "                    `|:%%%%%%$$$%$$$$$`~'$#######|'\r\n"
+			+ "               ___,--`|%%%%$%%%$$$$$#$$#$#######|'---,___\r\n"
+			+ "         __,~~~       |:%%%%%$%$%$$$$$$$########|        ~~~-..\r\n"
+			+ "     .-~^             `|%%%%$%%%$$$$$#$########|'              ~-,_\r\n"
+			+ "    (                   `^^-%%%$$%$$$$$####-^^'                    :.\r\n"
+			+ "    :;                                                              :.\r\n"
+			+ "    ::~~ ..                                                       .,;'\r\n"
+			+ "    `:.     ~ .. .                                        ..  ~     :\r\n"
+			+ "     `:.             ~     ...   .  ..    ..    .    ~            .:'\r\n"
+			+ "      `:.                                                         ::\r\n"
+			+ "       `::.                                                       ::\r\n"
+			+ "        |::.     ,:\"\"`:.                  .:'~`:.     .:~;.,;~;.  `:\r\n"
+			+ "        `| `:.,;'   .  `:.     .:~;.    .:'     `:..,:'        `:.;'\r\n"
+			+ "         |:          :   `:..,:'   `:.,:'          .           :|\r\n";
+
+
+}
+

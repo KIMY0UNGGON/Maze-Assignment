@@ -1,0 +1,19 @@
+package Maze;
+
+public class Enemy extends Entity{
+	public static String[] EnemyType= {"‍🐱‍👤","🤖","👹", "👾"};
+	public static String[] EnemyName = {"Ninja Cat","Runaway Robot", "Oni","Unknown Alien"};
+	//private int Attack; //공격력
+	public Enemy(int Stage, int TypeNum) {
+		super((int)((Math.random()*Stage+1)*12), EnemyType[TypeNum], EnemyName[TypeNum]);
+		setAttack((int)Math.random()*Stage);
+		
+	}
+	
+	@Override
+	public void Attack(Entity e) { 
+		int damage= (int)(getAttack()*(1+(e.getAValue()*0.01)));
+		e.MinusHp(getAttack());
+	}
+	
+}

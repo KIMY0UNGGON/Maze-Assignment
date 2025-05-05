@@ -1,0 +1,5 @@
+package Maze;
+
+public class Enemy {
+	public static String[] EnemyType= {"‍🐱‍👤"};
+}

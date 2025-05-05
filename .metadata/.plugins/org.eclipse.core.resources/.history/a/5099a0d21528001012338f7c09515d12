@@ -1,0 +1,39 @@
+package Maze;
+
+public class MapNode {
+	private int stage;
+	private boolean goal;
+	private MapNode Left,Mid,Right;
+	public boolean getGoal() {return goal;}
+	public MapNode(int stage) {
+		this.stage = stage;
+		if(stage > 50 && (int)(Math.random()*10) == 0) {
+			goal = true;
+		}
+		else goal = false;
+		if(!goal) {
+			if((int)(Math.random()*3) == 0) {
+				Left = new MapNode(stage++);
+			}
+			else Left = null;
+			if((int)(Math.random()*3) == 0) {
+				Mid = new MapNode(stage++);
+			}
+			else Mid = null;
+			if((int)(Math.random()*3) == 0) {
+				Right = new MapNode(stage++);
+			}
+			else Right = null;
+		}
+	}
+	public MapNode getMap(int n) { //0은 left, 1은 mid 2는 right
+		MapNode result = switch(n) {
+		case 0 -> Left;
+		case 1 -> Mid;
+		case 2 -> Right;
+		}
+		return null;
+	}
+	
+	
+}

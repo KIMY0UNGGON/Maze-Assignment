@@ -1,0 +1,16 @@
+package Maze;
+
+public class Enemy extends Entity{
+	public static String[] EnemyType= {"‍🐱‍👤","🤖","👹", "👾"};
+	public static String[] EnemyName = {"Ninja Cat","Runaway Robot", "Oni","Unknown Alien"};
+	private int Attack; //공격력
+	public Enemy(int Stage, int TypeNum) {
+		this.Attack = (int)Math.random()*Stage;
+		int hp = (int)Math.random()*Stage*2;
+		super(hp, EnemyType[TypeNum], EnemyName[TypeNum]);
+		// TODO Auto-generated constructor stub
+	}
+
+	
+	
+}

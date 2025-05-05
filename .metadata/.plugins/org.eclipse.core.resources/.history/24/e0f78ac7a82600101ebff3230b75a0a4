@@ -1,0 +1,6 @@
+package Maze;
+
+public class Enemy extends Entity{
+	public static String[] EnemyType= {"‍🐱‍👤","🤖","👹", "👾"};
+	
+}

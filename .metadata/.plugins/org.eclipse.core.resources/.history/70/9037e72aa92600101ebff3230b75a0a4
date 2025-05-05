@@ -1,0 +1,13 @@
+package Maze;
+
+public class Enemy extends Entity{
+	public static String[] EnemyType= {"‍🐱‍👤","🤖","👹", "👾"};
+	
+	public Enemy(int Stage, int TypeNum) {
+		super(hp, img, Name);
+		// TODO Auto-generated constructor stub
+	}
+
+	
+	
+}

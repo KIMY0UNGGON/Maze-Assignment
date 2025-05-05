@@ -1,0 +1,52 @@
+package Maze;
+
+
+public abstract class Entity {
+	private int hp;
+	public final int MAXHP;
+	private String img;
+	private String Name;
+	private int AttackValue;
+	private int ArmourValue;
+	public Entity(int hp, String img, String Name) {
+		this.MAXHP = hp;
+		this.hp = hp;
+		this.img = img;
+		this.Name = Name;
+		this.AttackValue = 0;
+		this.ArmourValue =0;
+	}
+	public int getAValue() { //방어력
+		return ArmourValue;
+	}
+	public void setAValue(int armour) { //방어력
+		this.ArmourValue += armour;
+	}
+	public void MinusHp(int hp) {
+		this.hp -= hp;
+	}
+	public void recovery(int hp) {
+		this.hp += hp;
+	}
+	
+	public String getImg() {return img;}
+	
+	public int getHp() {return hp;}
+
+	public void setAttack(int value) {
+		this.AttackValue = value;
+	}
+	public int getAttack() {
+		return AttackValue;
+	}
+	public String getName() {
+		return Name;
+	}
+	public void getStatus() {
+		System.out.println(img);
+		System.out.println("이름 : "+Name);
+		System.out.println("현재 체력 : "+hp);
+	}
+	
+	public abstract void Attack(Entity e);
+}

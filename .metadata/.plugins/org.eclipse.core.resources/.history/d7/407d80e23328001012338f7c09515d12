@@ -1,0 +1,102 @@
+package Maze;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class Player extends Entity  implements IScreen {	
+	public static final String[] Type = {"👩","🧔","🎅","👸"}; //플레이어 아이콘 종류
+	private LinkedList<Item>  ArmourEquit; //장착 중인 방어구
+	private LinkedList<Item> Bag; //가방
+	private LinkedList<Item> WeaponEquit; //장비장착 여부
+
+	public Player(String Name, int typeNum) {
+		super(100, Type[typeNum], Name);
+		ArmourEquit = new LinkedList<Item>();
+		Bag = new LinkedList<Item>(); 
+		WeaponEquit = new LinkedList<Item>(); 
+		setAttack((int)Math.random()*20+1); //1~20사이로 공격력을 설정 
+	
+	}
+
+	public LinkedList<Item> getBag() {
+		return Bag;
+		
+	}
+	
+	public void pickItem(Item item) { //아이템 줍기
+		Bag.add(item);
+	}
+	
+	public void EquitItem(Item item) {   //아이템 장착
+		if(item.getType().equals("Armour")) {
+			if(ArmourEquit.size() >= 4) {
+				System.out.println("더 이상 장비할 수 없습니다.");
+				return;
+			}
+			ArmourEquit.add(item);
+			System.out.println(item.getName()+" 장비완료");
+			System.out.println("현재 방어력 : "+getEValue(ArmourEquit));
+		}
+		else if(item.getType().equals("Weapon")) {
+			if(WeaponEquit.size() >= 2) {
+				System.out.println("더 이상 장비할 수 없습니다.");
+				return;
+			}
+			WeaponEquit.add(item);
+			System.out.println(item.getName()+" 장비완료");
+			System.out.println("현재 공격력 : "+getAttack()+"(+"+getEValue(WeaponEquit)+")");
+		}
+	}
+	
+	public int getEValue(LinkedList<Item> list) { //현재 장비한 무기 공격력 또는 방어력
+		
+		return list.stream().mapToInt(Item::getEffect).sum();
+		
+	}
+	
+	
+	public void printLoad(MapNode m) {
+		boolean left = m.getMap(0) != null;
+		boolean right = m.getMap(2) != null;
+		boolean mid = m.getMap(1) != null;
+		IScreen.printWall(left,mid,right);
+	}
+	
+	
+	@Override
+	public void Attack(Entity e) {
+		if(getAttack() == 0) {
+			super.Attack(e);
+		}
+		else {
+			e.MinusHp(getAttack());
+		}
+	}
+
+	@Override
+	public void getStatus() {
+		super.getStatus();
+		System.out.println("현재 공격력 : "+getAttack()+"(+"+getEValue(WeaponEquit)+")");
+		System.out.println("현재 방어력 : "+getEValue(ArmourEquit));
+		System.out.println("현재 장비중인 무기 : "+WeaponEquit.stream().map(Item::getName).collect(Collectors.joining(" ")));
+		System.out.println("현재 장비중인 방어구 : "+ArmourEquit.stream().map(Item::getName).
+				collect(Collectors.joining(" ")));
+		
+	}
+	
+
+	@Override
+	public MapNode move(MapNode m, int vect) {
+		// TODO Auto-generated method stub
+		int stage = m.getStage();
+		if(stage < 10) {
+			if((int)(Math.random()*10) == 1) {
+				Enemy e  = new Enemy(stage, (int)(Math.random()*4));
+				//랜덤 에너미 생성
+				
+			}
+		}
+		return m.getMap(vect);
+		
+	}
+}

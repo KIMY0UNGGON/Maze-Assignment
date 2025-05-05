@@ -1,0 +1,56 @@
+package Maze;
+
+import java.util.LinkedList;
+
+public class Entity {
+	private int hp;
+	public final int MAXHP;
+	private String img;
+	private String Name;
+	private int AttackValue;
+	private int ArmourValue;
+	public Entity(int hp, String img, String Name) {
+		this.MAXHP = hp;
+		this.hp = hp;
+		this.img = img;
+		this.Name = Name;
+		this.AttackValue = 0;
+	}
+	public int getAValue() { //방어력
+		return ArmourValue;
+	}
+	public void setAValue(int armour) { //방어력
+		this.ArmourValue += armour;
+	}
+	public void MinusHp(int hp) {
+		this.hp -= hp;
+	}
+	public void recovery(int hp) {
+		this.hp += hp;
+	}
+	
+	public String getImg() {return img;}
+	
+	public int getHp() {return hp;}
+
+	public void Attack(Entity e) { //무기가 없을때의 공격
+	 
+		e.MinusHp(AttackValue);
+	}
+	public void setAttack(int value) {
+		this.AttackValue = value;
+	}
+	public int getAttack() {
+		if(AttackValue == 0) {
+			return 10;
+		}
+		return AttackValue;
+	}
+	public String getName() {
+		return Name;
+	}
+	public void getStatus() {
+		System.out.println(getName());
+		System.out.println("현재 체력 : "+getHp());
+	}
+}

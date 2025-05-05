@@ -1,0 +1,98 @@
+package Maze;
+
+public class MapNode implements IScreen{
+	private int stage;
+	private boolean goal;
+	private MapNode Left,Mid,Right;
+	public boolean L,M,R;
+	public boolean getGoal() {return goal;}
+	public MapNode(int stage) {
+		this.stage = stage;
+		if(stage > 50 && (int)(Math.random()*10) < 5) {
+			goal = true;
+		}
+		else if(stage == 55) {
+			goal = true;
+		}
+		L = ((int)(Math.random()*3) == 0);
+		M = ((int)(Math.random()*3) == 0);
+		R = ((int)(Math.random()*3) == 0);
+		if(!L&&!M&&!R) {
+			switch((int)(Math.random()*3)) {
+			case 0 -> L = true;
+			case 1 -> M = true;
+			case 2 -> R = true;
+			}
+		}
+	}
+	public boolean getNode(int vect) {
+		return switch(vect) {
+		case 0 -> L;
+		case 1 -> M;
+		case 2 -> R;
+		default -> false;
+		};
+	}
+	public void move() {
+
+	
+		Left = L ? new MapNode(++stage) : null;
+		
+		Mid = M? new MapNode(++stage):null;
+			
+		Right = R? new MapNode(++stage):null;
+		
+		
+	}
+	public MapNode getMap(int n) { //0은 left, 1은 mid 2는 right
+		MapNode result = null;
+		switch(n) {
+		case 0:
+			result = Left;
+			Mid = null;
+			Right = null;
+			break;
+		case 1:
+			result = Mid;
+			Left = null;
+			Right = null;
+			break;
+		case 2:
+			result = Right;
+			Mid = null;
+			Left = null;
+			break;
+		}
+		return result;
+	}
+	public int getStage()
+	{
+		return stage;
+	}
+	public void printLoad(MapNode m) {
+		IScreen.printWall(L,M,R);
+	}
+	@Override
+	public MapNode move(Player p, int vect) {
+		// TODO Auto-generated method stub
+		int stage = getStage();
+		
+		if((int)(Math.random()*10) <= ((int)Math.ceil(stage/5)*2)) {
+			//랜덤 에너미 생성
+			Enemy e  = new Enemy(stage, (int)(Math.random()*4));
+			BattleManage.Battle(p, e);
+		}
+		else if(stage <= 20 && (int)(Math.random()*2) == 0){
+			//1/2확률로 아이템 드롭
+			BattleManage.DropItem(p,false);
+		}
+		else if((int)(Math.random()*10)==0) {
+			BattleManage.DropItem(p,false);
+		}
+		MapNode Next = getMap(vect);
+		Next.move();
+		
+		return Next;
+		
+	}
+}

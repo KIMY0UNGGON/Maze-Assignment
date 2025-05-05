@@ -1,0 +1,23 @@
+package Maze;
+
+import java.io.*;
+import java.util.*;
+
+public class Item {
+	private int 
+	//	private static HashMap<String, Integer> Items;
+//	public static void InitItems() {
+//		Items = new HashMap<String, Integer>();
+//		try {
+//			BufferedReader reader = new BufferedReader( new FileReader("Items.txt"));
+//			String ItemInfo;
+//			while((ItemInfo = reader.readLine()) != null) {
+//				String[] sp_Info = ItemInfo.split(":");
+//				Items.put(sp_Info[0], Integer.parseInt(sp_Info[1]));
+//			}
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			System.out.println("실패");
+//		}
+//	}
+}

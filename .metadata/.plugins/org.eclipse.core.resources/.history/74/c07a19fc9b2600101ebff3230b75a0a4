@@ -1,0 +1,35 @@
+package Maze;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
+public interface IMapMovable {
+
+	public static char[][] map = {{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+								  {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+								  {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+								  {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+								  {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+								  {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+								  {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+								  {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+								  {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+								  {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '}};
+	public static char[][] left = {};
+	public static char[][] mid = {};
+	public static char[][] right = {};
+	public static final int WIDTH =  map.length;
+	
+	
+	
+	public static int getHEIGHT(){
+		var result = new ArrayList<Integer>();
+		for(var e : map) {
+			result.add(e.length);
+		}
+		return Collections.max(result); //최대값 반환
+	}
+	
+	
+	public void move(Entity e); //맵 이동
+}
