@@ -5,49 +5,33 @@ import java.util.stream.Collectors;
 
 public class Player extends Entity {	
 	public static final String[] Type = {"👩","🧔","🎅","👸"}; //플레이어 아이콘 종류
-	private LinkedList<Item>  ArmourEquit; //장착 중인 방어구
+	private ArrayList<Item>  ArmourEquit; //장착 중인 방어구
 	private LinkedList<Item> Bag; //가방
-	private LinkedList<Item> WeaponEquit; //장비장착 여부
+	private ArrayList<Item> WeaponEquit; //장비장착 여부
 	public final static int MAX_WEAPON = 2;
-	public final static int MAX_ARMOUR = 4;
+	public final static int MAX_ARMOUR = 2;
 	private int stage;
 	public Player(String Name, int typeNum) {
 		super(100, Type[typeNum], Name);
-		ArmourEquit = new LinkedList<Item>();
+		ArmourEquit = new ArrayList<Item>();
 		Bag = new LinkedList<Item>(); 
-		WeaponEquit = new LinkedList<Item>(); 
+		WeaponEquit = new ArrayList<Item>(); 
 		setAttack((int)(Math.random()*14)+7); //7~20사이로 공격력을 설정 
-	
+		setLevel(1);
 	}
-	public LinkedList<Item> getArmour() {
-		return ArmourEquit;
-		
-	}
-	public LinkedList<Item> getWeapon() {
-		return WeaponEquit;
-		
-	}
-	public LinkedList<Item> getBag() {
-		return Bag;
-		
-	}
-	
-	public void pickItem(Item item) { //아이템 줍기
-		Bag.add(item);
-	}
-	
+	public ArrayList<Item> getArmour() {return ArmourEquit;}
+	public ArrayList<Item> getWeapon() {return WeaponEquit;}
+	public LinkedList<Item> getBag() {return Bag;}
+	public void pickItem(Item item) { Bag.add(item);}//아이템 줍기
 	public void releaseItem(Item item) { //장비해제
 		if(item.getType().equals("Armour")) {
-			
 			ArmourEquit.remove(item);
 			System.out.println(item.getName()+" 장비해제");
 			setAValue(-item.getEffect());
 			System.out.println("현재 방어력 : "+getAValue());
-			
 		}
 		else if(item.getType().equals("Weapon")) {
 			WeaponEquit.remove(item);
-			
 			System.out.println(item.getName()+" 장비해제");
 			System.out.println("현재 공격력 : "+getAttack()+"(+"+getEValue(WeaponEquit)+")");
 		}
@@ -57,9 +41,17 @@ public class Player extends Entity {
 			System.out.println(item.getName()+"을 사용합니다");
 			System.out.println(item.getEffect()+"만큼 회복합니다");
 		}
-	
-		
 	}
+	public int getEValue(ArrayList<Item> list) { //현재 장비한 무기 공격력 또는 방어력
+		return list.stream().mapToInt(Item::getEffect).sum();
+	}
+	@Override
+	public void Attack(Entity e) {
+		e.MinusHp(getAttack()+getEValue(WeaponEquit));
+	}
+	
+	
+	
 	
 	public void EquitItem(Item item) {   //아이템 장착
 		if(item.getType().equals("Armour")) {
@@ -83,24 +75,6 @@ public class Player extends Entity {
 			System.out.println("현재 공격력 : "+getAttack()+"(+"+getEValue(WeaponEquit)+")");
 		}
 	}
-	
-	public int getEValue(LinkedList<Item> list) { //현재 장비한 무기 공격력 또는 방어력
-		
-		return list.stream().mapToInt(Item::getEffect).sum();
-		
-	}
-	
-	
-
-	
-	
-	@Override
-	public void Attack(Entity e) {
-		
-		e.MinusHp(getAttack()+getEValue(WeaponEquit));
-		
-	}
-
 	@Override
 	public void getStatus() {
 		super.getStatus();
@@ -109,9 +83,5 @@ public class Player extends Entity {
 		System.out.println("현재 장비중인 무기 : "+WeaponEquit.stream().map(Item::getName).collect(Collectors.joining(", ")));
 		System.out.println("현재 장비중인 방어구 : "+ArmourEquit.stream().map(Item::getName).
 				collect(Collectors.joining(", ")));
-		
 	}
-	
-
-	
 }

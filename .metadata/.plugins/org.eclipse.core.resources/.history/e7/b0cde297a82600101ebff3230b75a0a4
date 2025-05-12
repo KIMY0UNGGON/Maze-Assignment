@@ -1,5 +1,0 @@
-package Maze;
-
-public class Enemy {
-	public static char[] EnemyType= {"‍🐱‍👤",}
-}

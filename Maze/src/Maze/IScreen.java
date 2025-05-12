@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public interface IScreen {
 	public MapNode move(Player m, int vect,  Scanner sc); //맵 이동	
-
+	public void printLoad();
 	//플레이어는 최대 3방향으로 이동가능
 	public static final String[] OPEN_LEFT = {
 			"|\\                   /",
@@ -21,9 +21,6 @@ public interface IScreen {
 			"|     |      |        ",
 			"|_____|      |________"
 	};
-	
-	
-	
 	public static final String[] OPEN_MID = {
 										
 			"|\\                  /|",
@@ -44,22 +41,21 @@ public interface IScreen {
 			"\\                   /|",
 			" \\                 / |",
 			"  \\                / |",
-			"   \\               / |",
-			"     \\            /  |",
+			"    \\              / |",
 			"      \\           /  |",
 			"       \\          /  |",
-			"        \\  ______/   |",
+			"        \\         /  |",
+			"          \\______/   |",
 			"          |      |   |",
 			"          |      |   |",
 			"          |      |   |",
 			"          |      |   |",
 			"__________|      |___|"};
-	
 	public static final String[] MOVE_LEFT = {
 			"                        |\\                   /|\n"+
 			"                        | \\                 / |\n"+
 			"                        | \\                /  |\n"+
-			"                        |  \\              /   |\n"+
+			"                        | \\               /   |\n"+
 			"                        |  \\             /    |\n"+
 			"                        |   \\           /     |\n"+
 			"                        |    \\_________/      |\n"+
@@ -74,8 +70,8 @@ public interface IScreen {
 			"                        | \\                 / |\n"+
 			"                        | \\                /  |\n"+
 			"                        |  \\              /   |\n"+
-			"                        |   \\            /    |\n"+
-			"                        |    \\__________/     |\n"+
+			"                        |   \\             /   |\n"+
+			"                        |    \\___________/    |\n"+
 			"                        |    |           |    |\n"+
 			"                        |    |           |    |\n"+
 			"                        |    |           |    |\n"+
@@ -85,10 +81,10 @@ public interface IScreen {
 			"                        |____|           |____|",
 			
 			"                        |\\                   /|\n"+
-			"                        | \\                 / |\n"+
+			"                        |\\                  / |\n"+
 			"                        | \\                /  |\n"+
 			"                        |  \\______________/   |\n"+
-			"                        |  |              |    |\n"+
+			"                        |  |              |   |\n"+
 			"                        |  |              |   |\n"+
 			"                        |  |              |   |\n"+
 			"                        |  |              |   |\n"+
@@ -100,11 +96,11 @@ public interface IScreen {
 	};
 
 	public static final String[] MOVE_RIGHT = {
-			"                        |  \\                 /|\n" +
-			"                        |   \\               / |\n" +
+			"                        |   \\                /|\n" +
 			"                        |    \\              / |\n" +
 			"                        |     \\             / |\n" +
-			"                        |      \\           /  |\n" +
+			"                        |      \\            / |\n" +
+			"                        |       \\          /  |\n" +
 			"                        |        \\         /  |\n" +
 			"                        |         \\________/  |\n" +
 			"                        |         |        |  |\n" +
@@ -266,6 +262,27 @@ public interface IScreen {
 			}
 		}
 	}
+	public static String[] EntityScreen(Entity e){
+		String[] result = {
+				e.getName()+" Lv."+e.getLevel(),
+				"HP["+e.getHp()+"/"+e.MAXHP+"]",
+				HPBar(e.getHp(),e.MAXHP),
+				"", //아이콘과 칸을 구분하기 위한 공백
+				e.getImg()
+		};
+		return result;
+	}
+	
+	public static void printWall(boolean LEFT,boolean MID, boolean RIGHT) {
+		String[]L = LEFT ?  OPEN_LEFT:CLOSED;
+		String[]M = MID ?  OPEN_MID:CLOSED;
+		String[]R = RIGHT ?  OPEN_RIGHT:CLOSED; 
+		
+		for(int i = 0; i < OPEN_LEFT.length; i++) {	
+			System.out.println(L[i]+M[i]+R[i]);
+		}
+	}
+	
 	
 	public static void UpdateMove(int vect) {
 		String[] print = switch(vect){
@@ -307,20 +324,11 @@ public interface IScreen {
 		print = null;
 	}
 	
-	public static String[] EntityScreen(Entity e){
-		String[] result = {
-				e.getName(),
-				"HP["+e.getHp()+"/"+e.MAXHP+"]",
-				HPBar(e.getHp(),e.MAXHP),
-				"", //아이콘과 칸을 구분하기 위한 공백
-				e.getImg()
-		};
-		return result;
-	}
 	public static String HPBar(int HP, int maxHP) {
 		
 		final int Bar = (int)((double)(5.0/24*maxHP)); //HP바 크기
-		int block = (HP > maxHP/2) ? (int)((double)(HP*1.0/maxHP) * Bar) : (int)((double)(HP*1.0/maxHP) * Bar*2); 
+		int block = (HP > maxHP/2) ? 
+				(int)((double)((1.0*HP-(maxHP/2.0))/(maxHP/2.0) * Bar)) : (int)((double)(HP*1.0/(maxHP/2.0) * Bar)); 
 		//현재 남은 HP의 칸수가 절반 이하면 현재 block에 2배 HP바가 2단으로 되어 있기 때문
 		String result = "[";
 		for(int i = 0; i<block; i++) {
@@ -340,32 +348,12 @@ public interface IScreen {
 	}
 	
 	public static void Clear() {
-		for(int i = 0; i< OPEN_LEFT.length+5; i++) {
+		for(int i = 0; i< OPEN_LEFT.length; i++) {
 			System.out.println();
 		}
 	}
-	public static void printWall(boolean LEFT,boolean MID, boolean RIGHT) {
-		String[]L = LEFT ?  OPEN_LEFT:CLOSED;
-		String[]M = MID ?  OPEN_MID:CLOSED;
-		String[]R = RIGHT ?  OPEN_RIGHT:CLOSED; 
-		
-		for(int i = 0; i < OPEN_LEFT.length; i++) {
-			
-			System.out.println(L[i]+M[i]+R[i]);
-		}
-		
 
-	}
-	public static void printMove(int vect) {
-		switch(vect) {
-		case 0:
-			break;
-		case 1:
-			break;
-		case 2:
-			break;
-		}
-	}
+
 	
 	
 	

@@ -10,10 +10,10 @@ public class MapNode implements IScreen{
 	public boolean getGoal() {return goal;}
 	public MapNode(int stage) {
 		this.stage = stage;
-		if(stage > 50 && (int)(Math.random()*10) < 5) {
+		if(stage > 20 && (int)(Math.random()*10) < 5) {
 			goal = true;
 		}
-		else if(stage == 55) {
+		else if(stage == 25) {
 			goal = true;
 		}
 		L = ((int)(Math.random()*3) == 0);
@@ -27,7 +27,7 @@ public class MapNode implements IScreen{
 			}
 		}
 	}
-	public boolean getNode(int vect) {
+	public boolean IsMovable(int vect) {
 		return switch(vect) {
 		case 0 -> L;
 		case 1 -> M;
@@ -35,16 +35,11 @@ public class MapNode implements IScreen{
 		default -> false;
 		};
 	}
-	public void move() {
-
-	
-		Left = L ? new MapNode(++stage) : null;
-		
-		Mid = M? new MapNode(++stage):null;
-			
-		Right = R? new MapNode(++stage):null;
-		
-		
+	public void Init() {
+		int s = stage+1;
+		Left = L ? new MapNode(s) : null;
+		Mid = M? new MapNode(s):null;
+		Right = R? new MapNode(s):null;
 	}
 	public MapNode getMap(int n) { //0은 left, 1은 mid 2는 right
 		MapNode result = null;
@@ -67,13 +62,10 @@ public class MapNode implements IScreen{
 		}
 		return result;
 	}
-	public int getStage()
-	{
-		return stage;
-	}
-	public void printLoad() {
-		IScreen.printWall(L,M,R);
-	}
+	public int getStage(){return stage;}
+	
+	@Override
+	public void printLoad() {IScreen.printWall(L,M,R);}
 	@Override
 	public MapNode move(Player p, int vect, Scanner sc) {
 		// TODO Auto-generated method stub
@@ -81,19 +73,18 @@ public class MapNode implements IScreen{
 		IScreen.UpdateMove(vect);
 		if((int)(Math.random()*10) <= ((int)Math.ceil(stage/5)*2)) {
 			//랜덤 에너미 생성
-			Enemy e  = new Enemy(stage, (int)(Math.random()*4));
-			BattleManage.Battle(p, e, sc);
+			Enemy e  = new Enemy(stage, (int)(Math.random()*4),p);
+			PlayManage.Battle(p, e, sc);
 		}
 		else if(stage <= 20 && (int)(Math.random()*2) == 0){
 			//1/2확률로 아이템 드롭
-			BattleManage.DropItem(p,false, sc);
+			PlayManage.DropItem(p,false, sc);
 		}
-		else if((int)(Math.random()*10)==0) {
-			BattleManage.DropItem(p,false, sc);
+		else if(stage > 20 && (int)(Math.random()*10)==0) {
+			PlayManage.DropItem(p,false, sc);
 		}
 		MapNode Next = getMap(vect);
-		Next.move();
-		
+		Next.Init();
 		return Next;
 		
 	}

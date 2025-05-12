@@ -1,0 +1,251 @@
+package Maze;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import Maze.Entity;
+import Maze.Player;
+public class PlayManage { //배틀에서의 출력
+	public static void Battle(Player p, Entity e, Scanner sc) {
+		int choose = -1;
+		boolean fight = false;
+		while(true) {
+			IScreen.Clear();
+			Update(IScreen.EntityScreen(p),IScreen.EntityScreen(e));
+			if(!fight) System.out.println("이동하던 중 "+e.getName()+"와 조우하였다.");
+			try {
+				if(fight) System.out.println(e.getName()+"의 공격! 데미지 : "+e.getAttack());
+				System.out.print("공격 <1> 가방 <2> 도망치기<3> : ");
+				choose = sc.nextInt();
+				if(choose <= 0 || choose >3) throw new Exception("입력오류");
+			}
+			catch(Exception e1) {
+				System.out.println("현재 그 행동은 할 수 없습니다.");
+				continue;
+			}
+			sc.nextLine();
+			fight = true;
+			if(choose == 1) {
+				if(!AttackManage(p,e)) {
+					Update(IScreen.EntityScreen(p),IScreen.EntityScreen(e));
+					System.out.println(e.getName()+"을 쓰러뜨렸다!");
+					System.out.println(e.getName()+"의 몸이 타들어가며 사라져간다");
+					int exp = p.getEXP();
+					p.expUp((int)(Math.random()*10+1)*e.getLevel());
+					System.out.println("<-엔터");
+					sc.nextLine();
+					if((int)(Math.random()*8) < 6) {
+						System.out.println(e.getName()+"가 사라진 자리에 무언가 반짝인다. <-엔터");
+						sc.nextLine();
+						DropItem(p,true, sc);	
+					}
+					break;
+				}
+				Update(IScreen.EntityScreen(p),IScreen.EntityScreen(e));
+				System.out.println(p.getName()+"의 공격! 데미지 : "+p.getAttack()+"(+"+p.getEValue(p.getWeapon())+")");
+				try {Thread.sleep(1000);}
+				catch(Exception e3) {}
+				if(!AttackManage(e,p)) break;
+				Update(IScreen.EntityScreen(p),IScreen.EntityScreen(e));
+			}
+			else if(choose == 2) {
+				if(p.getBag().isEmpty()) {
+					System.out.println("현재 가방이 비었습니다.");
+					System.out.print("엔터<-");
+					sc.nextLine();
+					continue;
+				}
+				else {
+					Item Potion = BagManage(p,true, sc);
+					if(Potion == null) {
+						System.out.println("가방을 닫습니다. 엔터<-");
+						sc.nextLine();
+						continue;
+					}
+					else {
+						p.releaseItem(Potion);
+						if(!AttackManage(e,p)) break;
+						Update(IScreen.EntityScreen(p),IScreen.EntityScreen(e));
+					}
+				}
+			}
+			else {
+				if((int)(Math.random()*20) == 1) {
+					//1/20확률로 도망치기 성공
+					System.out.println(e.getName()+"에게서 간신히 도망쳤다.");
+					System.out.print("엔터<-");
+					sc.nextLine();
+					break;
+				}
+				System.out.println("이런! 도망치는데 실패했다.");
+				System.out.print("엔터<-");
+				sc.nextLine();
+				if(!AttackManage(e,p)) break;
+				Update(IScreen.EntityScreen(p), IScreen.EntityScreen(e));
+			}
+		}
+		
+	}
+	
+	private static void UpdateBattle(Entity p, Entity e) {
+		String[] PL = IScreen.EntityScreen(p);
+		String[] EN = IScreen.EntityScreen(e);
+		for(int i = 0; i< 10; i++) {
+			if(p instanceof Player) Update(PL,EN);
+			else Update(EN,PL);
+			
+			if(i % 2 == 0) EN[4] = "";
+			else EN[4] = e.getImg();
+			try {
+				Thread.sleep(128);
+			}
+			catch(Exception e2) {
+				
+			}
+			IScreen.Clear();
+		}
+	}
+	private static boolean AttackManage(Entity p, Entity e) {
+		UpdateBattle(p,e);
+		p.Attack(e);
+		if(e.getHp() <= 0) {
+			return false;
+		}
+		return true;
+	}
+	private static void Update(String[] PL, String[] EN) {
+		Arrays.asList(EN).forEach((s) -> System.out.printf("%42s\n", s));
+		Arrays.asList(PL).forEach((s) -> System.out.printf("%-42s\n", s));
+	}
+	
+	
+	
+	//아이템 드롭 메소드
+	public static void DropItem(Player p,boolean battle, Scanner sc) {
+		IScreen.UpdateDrop();
+		String answer;
+		boolean bag;
+		List<Item> Items;
+		if(battle) //효과가 높은 것들을 드롭
+			Items = Item.ALLItems.stream().filter((i) -> i.getEffect() >= 50).collect(Collectors.toList());
+		else//효과가 적은 것들만 드롭
+			Items = Item.ALLItems.stream().filter((i) -> i.getEffect() < 50 ).collect(Collectors.toList());
+		Item dropItem = Items.get((int)(Math.random()*Items.size()));
+		
+		System.out.println(dropItem.getName()+"을 발견하였다.");
+		for(;;) {
+			if(dropItem.getType().equals(Item.ItemTypes[1]) && p.getArmour().size() < Player.MAX_ARMOUR){
+				System.out.print(dropItem.getName()+"을 장비하시겠습니까? (Y 또는 1/N 또는 0) : ");
+				bag =false;
+			}
+			else if(dropItem.getType().equals(Item.ItemTypes[2]) && p.getWeapon().size() < Player.MAX_WEAPON) {
+				System.out.print(dropItem.getName()+"을 장비하시겠습니까? (Y 또는 1/N 또는 0) : ");
+				bag = false;
+			}
+			else {
+				System.out.print(dropItem.getName()+"을 가방에 집어넣으시겠습니까? (Y 또는 1/N 또는 0) : ");
+				bag = true;
+			}
+			answer = sc.nextLine();
+			if(answer.equals("Y") || answer.equals("1")) {
+				if(bag) p.pickItem(dropItem);
+				else p.EquitItem(dropItem);
+				break;
+			}
+			else if(answer.equals("N")||answer.equals("0")) {
+				System.out.println(dropItem.getName()+"을 버리고 다음 공간으로 걸어갑니다.");
+				break;
+			}
+			else {
+				System.out.println("다시 입력해주세요.");
+				continue;
+			}
+		}
+		System.out.println("엔터<ㅡ");
+		sc.nextLine();	
+	}
+	
+
+	
+	//가방확인 메소드
+	public static Item BagManage(Player p , boolean battle, Scanner sc) {
+		int input;
+		var bag = p.getBag();
+		Item result = null;
+		for(;;) {
+			try {
+				for(int i =0 ; i< bag.size(); i++) {
+					System.out.println((i+1)+". "+bag.get(i).getName());
+				}
+				System.out.print("사용할 아이템의 번호를 입력해주세요 (종료 : 0) : ");
+				input = sc.nextInt();
+				if(input < 0 || (input != 0 && input > bag.size())) {throw new Exception("입력오류");}
+			}
+			catch(Exception e) {
+				System.out.println("다시 입력해주세요.");
+				IScreen.Clear();
+				continue;
+			}
+			sc.nextLine(); //버퍼비움
+			if(input == 0) break;
+			if(bag.get(input-1).getType().equals("Potion")) {
+				result = bag.get(input-1);
+				String answer;
+				for(;;) {
+					System.out.println(result.getName()+"을 사용하시겠습니까? (Y or 1/N or 0) : ");
+					answer = sc.nextLine();
+					if(answer.equals("Y") || answer.equals("1")) return result;
+					else if(answer.equals("N") || answer.equals("0"))break;
+					else {
+						System.out.println("다시 입력해주세요");
+						continue;
+					}
+				}
+				break;
+			}
+			else if(battle) {
+				System.out.println("전투중에는 장비변경이 불가능합니다.");
+				continue;
+			}
+			else ConfirmItem(bag.get(input-1),p,sc);
+		}
+		bag = null;
+		return result;
+		
+	}
+
+	//장비확인 메소드
+	private static void ConfirmItem(Item items, Player p, Scanner sc) {
+		var ItemTypes = (items.getType().equals("Armour")) ? p.getArmour() : p.getWeapon();
+		int Size = (items.getType().equals("Armour")) ? Player.MAX_ARMOUR :Player.MAX_WEAPON;
+		int ans;
+		if(ItemTypes.size() >= Size) {
+			for(;;) {
+				for(int i =0; i< Size; i++) {
+					System.out.println((i+1)+". "+ItemTypes.get(i).getName());
+				}
+				try {
+					ans = sc.nextInt();
+					if(ans<= 0 || ans >Size) {throw new Exception("입력오류");}
+				}
+				catch(Exception e) {
+					System.out.println("다시 입력해주세요.");
+					continue;
+				}
+				p.releaseItem(ItemTypes.get(ans-1));
+				System.out.print("엔터 <-");
+				sc.nextLine();
+				break;			
+			}
+		}
+		p.EquitItem(items);
+		items = null;
+		ItemTypes = null;
+		System.out.print("엔터 <-");
+		sc.nextLine();
+		
+	}
+
+}

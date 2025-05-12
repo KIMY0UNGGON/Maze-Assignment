@@ -1,4 +1,5 @@
-low Potion:10:0
+low Potion:30:0
+normal potion:50:0
 broad Sword:10:2
 normal armour:25:1
 long Sword:25:2
