@@ -1,5 +1,3 @@
-2025/05/18-21:20:15.615 17e0 Log #3: 13 ops saved to Table #4 OK
-2025/05/18-21:20:15.618 17e0 Archiving C:\Users\yg\OneDrive\desktop\과제 자기주도 진로설계\Maze-Assignment\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database/000003.log: OK
-2025/05/18-21:20:15.619 17e0 Table #4: 13 entries OK
-2025/05/18-21:20:15.619 17e0 Archiving C:\Users\yg\OneDrive\desktop\과제 자기주도 진로설계\Maze-Assignment\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database/MANIFEST-000001: OK
-2025/05/18-21:20:15.622 17e0 **** Repaired leveldb C:\Users\yg\OneDrive\desktop\과제 자기주도 진로설계\Maze-Assignment\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database; recovered 1 files; 323 bytes. Some data may have been lost. ****
+2025/05/18-21:49:34.176 9e1c Reusing MANIFEST C:\Users\yg\OneDrive\desktop\과제 자기주도 진로설계\Maze-Assignment\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database/MANIFEST-000001
+2025/05/18-21:49:34.181 9e1c Recovering log #6
+2025/05/18-21:49:34.181 9e1c Reusing old log C:\Users\yg\OneDrive\desktop\과제 자기주도 진로설계\Maze-Assignment\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database/000006.log 

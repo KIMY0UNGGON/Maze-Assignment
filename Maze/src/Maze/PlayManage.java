@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 import Maze.Entity;
 import Maze.Player;
 public class PlayManage { //배틀에서의 출력
+	
 	public static void Battle(Player p, Entity e, Scanner sc) {
 		int choose = -1;
 		boolean fight = false;

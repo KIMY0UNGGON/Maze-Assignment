@@ -7,7 +7,9 @@ public class MapNode implements IScreen{
 	private boolean goal;
 	private MapNode Left,Mid,Right;
 	public boolean L,M,R;
+	
 	public boolean getGoal() {return goal;}
+	
 	public MapNode(int stage) {
 		this.stage = stage;
 		if(stage > 20 && (int)(Math.random()*10) < 5) {
@@ -27,6 +29,7 @@ public class MapNode implements IScreen{
 			}
 		}
 	}
+	
 	public boolean IsMovable(int vect) {
 		return switch(vect) {
 		case 0 -> L;
