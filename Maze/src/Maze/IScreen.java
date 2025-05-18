@@ -321,6 +321,7 @@ public interface IScreen {
 				}
 			}
 		}
+		Clear();
 		print = null;
 	}
 	
